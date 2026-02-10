@@ -1,12 +1,30 @@
 ---
 name: caldav-cli
-description: Manage CalDAV calendars (iCloud, Google, Yandex, Fastmail, Nextcloud, Baikal) from the command line. Supports OAuth2 and Basic auth, multi-account, table/JSON output.
-metadata: {"clawdbot":{"emoji":"📅","os":["linux","macos"],"requires":{"bins":["caldav-cli","node"]},"install":[{"id":"npm","kind":"shell","command":"npm install -g caldav-cli","bins":["caldav-cli"],"label":"Install caldav-cli via npm"}]}}
+description: Manage CalDAV calendars (iCloud, Google, Yandex) from the command line. Supports OAuth2 and Basic auth, multi-account, table/JSON output.
+metadata: {"clawdbot":{"emoji":"📅","os":["linux","macos"],"requires":{"bins":["caldav-cli","node"]},"install":[{"id":"npm","kind":"shell","command":"npm install -g caldav-cli","bins":["caldav-cli"],"label":"Install caldav-cli via npm"}],"source":"https://github.com/cyberash-dev/caldav-cli"}}
 ---
 
 # caldav-cli
 
 A CalDAV CLI client. Manages multiple accounts with secure OS keychain storage. Supports iCloud, Google (OAuth2), Yandex, Fastmail, Nextcloud, Baikal, and any custom CalDAV server.
+
+## Installation
+
+Requires Node.js >= 18.
+
+```bash
+npm install -g caldav-cli
+```
+
+After installation the `caldav-cli` command is available globally.
+
+## Quick Start
+
+```bash
+caldav-cli account add          # Interactive wizard: pick provider, enter credentials
+caldav-cli events list          # Show events for the next 7 days
+caldav-cli events create        # Interactive wizard: create a new event
+```
 
 ## Account Management
 
@@ -95,10 +113,11 @@ The wizard will ask for these, then open a browser for authorization. The refres
 
 ## Data Storage
 
-- Credentials (passwords, OAuth2 refresh tokens): OS keychain via `@napi-rs/keyring`
-- Account config (name, provider, server URL, OAuth client config): `~/.config/caldav-cli/config.json`
+- **Passwords and OAuth2 refresh tokens**: OS keychain (macOS Keychain, Linux libsecret, Windows Credential Vault) via `@napi-rs/keyring`. Never written to disk in plaintext.
+- **Account metadata** (name, provider ID, username, server URL): `~/.config/caldav-cli/config.json`
+- **OAuth2 client credentials** (Client ID, Client Secret, Token URL): also stored in `~/.config/caldav-cli/config.json` in plaintext. These are per-user credentials that the user creates themselves in Google Cloud Console. They are not bearer tokens and cannot access data without the refresh token (which is in the keychain).
 
-No secrets are stored in plaintext on disk.
+Protect `~/.config/caldav-cli/config.json` with appropriate file permissions if you store OAuth2 client credentials.
 
 ## Flag Reference
 
