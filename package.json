@@ -1,6 +1,6 @@
 {
   "name": "caldav-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A command-line CalDAV client for managing calendar events across multiple accounts",
   "type": "module",
   "bin": {
@@ -36,11 +36,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cyberash/caldav-cli.git"
+    "url": "https://github.com/cyberash-dev/caldav-cli.git"
   },
-  "homepage": "https://github.com/cyberash/caldav-cli#readme",
+  "homepage": "https://github.com/cyberash-dev/caldav-cli#readme",
   "bugs": {
-    "url": "https://github.com/cyberash/caldav-cli/issues"
+    "url": "https://github.com/cyberash-dev/caldav-cli/issues"
   },
   "engines": {
     "node": ">=18"

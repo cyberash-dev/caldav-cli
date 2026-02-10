@@ -8,6 +8,24 @@ metadata: {"clawdbot":{"emoji":"📅","os":["linux","macos"],"requires":{"bins":
 
 A CalDAV CLI client. Manages multiple accounts with secure OS keychain storage. Supports iCloud, Google (OAuth2), Yandex, Fastmail, Nextcloud, Baikal, and any custom CalDAV server.
 
+## Installation
+
+Requires Node.js >= 18.
+
+```bash
+npm install -g caldav-cli
+```
+
+After installation the `caldav-cli` command is available globally.
+
+## Quick Start
+
+```bash
+caldav-cli account add          # Interactive wizard: pick provider, enter credentials
+caldav-cli events list          # Show events for the next 7 days
+caldav-cli events create        # Interactive wizard: create a new event
+```
+
 ## Account Management
 
 Add account (interactive wizard — prompts for provider, credentials, tests connection):
