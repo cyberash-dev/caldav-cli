@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { homedir } from "node:os"
 import { join } from "node:path"
-import type { OAuthAccountConfig, OAuthConfigPort } from "../../application/ports/oauth-config.port.js"
+import type { OAuthAccountConfig } from "../../application/ports/oauth-config.port.js"
 import type { ServerUrlConfigPort } from "../../application/ports/server-url-config.port.js"
 import type { Account } from "../../domain/entities/account.js"
 import type { AccountConfigPort } from "../../domain/ports/account-config.port.js"
@@ -9,11 +9,10 @@ import type { AccountConfigPort } from "../../domain/ports/account-config.port.j
 type ConfigFile = {
   accounts: Array<Account>
   serverUrls: Record<string, string>
-  oauthConfigs: Record<string, OAuthAccountConfig>
   defaultAccount?: string | undefined
 }
 
-export class JsonFileConfigAdapter implements AccountConfigPort, ServerUrlConfigPort, OAuthConfigPort {
+export class JsonFileConfigAdapter implements AccountConfigPort, ServerUrlConfigPort {
   private readonly configDir: string
   private readonly configPath: string
 
@@ -29,17 +28,31 @@ export class JsonFileConfigAdapter implements AccountConfigPort, ServerUrlConfig
       return {
         accounts: parsed.accounts ?? [],
         serverUrls: parsed.serverUrls ?? {},
-        oauthConfigs: parsed.oauthConfigs ?? {},
         defaultAccount: parsed.defaultAccount,
       }
     } catch {
-      return { accounts: [], serverUrls: {}, oauthConfigs: {} }
+      return { accounts: [], serverUrls: {} }
     }
   }
 
   private async write(config: ConfigFile): Promise<void> {
     await mkdir(this.configDir, { recursive: true })
-    await writeFile(this.configPath, JSON.stringify(config, null, 2), "utf-8")
+    await writeFile(this.configPath, JSON.stringify(config, null, 2), { encoding: "utf-8", mode: 0o600 })
+  }
+
+  async drainOAuthConfigs(): Promise<Record<string, OAuthAccountConfig>> {
+    try {
+      const raw = await readFile(this.configPath, "utf-8")
+      const parsed = JSON.parse(raw) as Record<string, unknown>
+      const oauthConfigs = (parsed["oauthConfigs"] ?? {}) as Record<string, OAuthAccountConfig>
+      if (Object.keys(oauthConfigs).length === 0) return {}
+      const { ["oauthConfigs"]: _, ...rest } = parsed
+      await mkdir(this.configDir, { recursive: true })
+      await writeFile(this.configPath, JSON.stringify(rest, null, 2), { encoding: "utf-8", mode: 0o600 })
+      return oauthConfigs
+    } catch {
+      return {}
+    }
   }
 
   async loadAll(): Promise<Array<Account>> {
@@ -66,9 +79,6 @@ export class JsonFileConfigAdapter implements AccountConfigPort, ServerUrlConfig
 
     const { [accountName]: _removedUrl, ...remainingUrls } = config.serverUrls
     config.serverUrls = remainingUrls
-
-    const { [accountName]: _removedOAuth, ...remainingOAuth } = config.oauthConfigs
-    config.oauthConfigs = remainingOAuth
 
     if (config.defaultAccount === accountName) {
       config.defaultAccount = config.accounts[0]?.name
@@ -103,24 +113,6 @@ export class JsonFileConfigAdapter implements AccountConfigPort, ServerUrlConfig
     const config = await this.read()
     const { [accountName]: _removed, ...remainingUrls } = config.serverUrls
     config.serverUrls = remainingUrls
-    await this.write(config)
-  }
-
-  async getOAuthConfig(accountName: string): Promise<OAuthAccountConfig | undefined> {
-    const config = await this.read()
-    return config.oauthConfigs[accountName]
-  }
-
-  async saveOAuthConfig(accountName: string, oauthConfig: OAuthAccountConfig): Promise<void> {
-    const config = await this.read()
-    config.oauthConfigs[accountName] = oauthConfig
-    await this.write(config)
-  }
-
-  async removeOAuthConfig(accountName: string): Promise<void> {
-    const config = await this.read()
-    const { [accountName]: _removed, ...remaining } = config.oauthConfigs
-    config.oauthConfigs = remaining
     await this.write(config)
   }
 }

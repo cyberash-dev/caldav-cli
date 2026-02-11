@@ -6,6 +6,7 @@ import { ListEventsUseCase } from "./application/use-cases/list-events.usecase.j
 import { RemoveAccountUseCase } from "./application/use-cases/remove-account.usecase.js"
 import { JsonFileConfigAdapter } from "./infrastructure/adapters/json-file-config.adapter.js"
 import { KeyringCredentialAdapter } from "./infrastructure/adapters/keyring-credential.adapter.js"
+import { KeyringOAuthConfigAdapter } from "./infrastructure/adapters/keyring-oauth-config.adapter.js"
 import { LocalServerOAuthAdapter } from "./infrastructure/adapters/local-server-oauth.adapter.js"
 import { TsdavCalDAVAdapter } from "./infrastructure/adapters/tsdav-caldav.adapter.js"
 import { ProviderRegistryAdapter } from "./infrastructure/providers/provider-registry.adapter.js"
@@ -16,10 +17,16 @@ import { createCli } from "./presentation/cli.js"
 
 const providerRegistry = new ProviderRegistryAdapter()
 const config = new JsonFileConfigAdapter()
-const caldav = new TsdavCalDAVAdapter(providerRegistry, config, config)
+const oauthConfig = new KeyringOAuthConfigAdapter()
+const caldav = new TsdavCalDAVAdapter(providerRegistry, config, oauthConfig)
 const credentials = new KeyringCredentialAdapter()
 const prompt = new InquirerPromptAdapter()
 const oauth = new LocalServerOAuthAdapter()
+
+const legacy = await config.drainOAuthConfigs()
+for (const [accountName, oauthCfg] of Object.entries(legacy)) {
+  await oauthConfig.saveOAuthConfig(accountName, oauthCfg)
+}
 
 const tablePresenter = new TablePresenterAdapter()
 const jsonPresenter = new JsonPresenterAdapter()
@@ -34,11 +41,11 @@ const addAccount = new AddAccountUseCase(
   config,
   config,
   oauth,
-  config,
+  oauthConfig,
   tablePresenter,
 )
 
-const removeAccount = new RemoveAccountUseCase(config, credentials, config, tablePresenter)
+const removeAccount = new RemoveAccountUseCase(config, credentials, oauthConfig, tablePresenter)
 const listAccounts = new ListAccountsUseCase(config, tablePresenter)
 
 const program = createCli(

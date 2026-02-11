@@ -7,7 +7,7 @@ A command-line CalDAV client for managing calendar events across multiple accoun
 - Multi-account management with secure OS keychain credential storage
 - Interactive setup wizard for popular CalDAV providers
 - OAuth2 authentication support (Google Calendar)
-- Basic auth with app passwords (iCloud, Yandex, Fastmail, etc.)
+- Basic auth with app passwords (iCloud, Yandex, etc.)
 - Custom CalDAV server support
 - Interactive event creation wizard
 - List scheduled events in a table or JSON format
@@ -144,7 +144,9 @@ index.ts         Composition root — wires everything together.
 
 ## Security
 
-Credentials (passwords and OAuth2 refresh tokens) are stored in the OS-native keychain (macOS Keychain, Linux libsecret, Windows Credential Vault) via `@napi-rs/keyring`. Secrets never touch disk in plaintext. Account metadata (name, provider, server URL, username) and OAuth2 client configuration are stored in `~/.config/caldav-cli/config.json`.
+All credentials — passwords, OAuth2 refresh tokens, and OAuth2 client credentials (Client ID, Client Secret) — are stored in the OS-native keychain (macOS Keychain, Linux libsecret, Windows Credential Vault) via `@napi-rs/keyring`. Secrets never touch disk in plaintext. Only non-sensitive account metadata (name, provider, server URL, username) is stored in `~/.config/caldav-cli/config.json` (file permissions `0600`).
+
+The npm package is published with [provenance attestation](https://docs.npmjs.com/generating-provenance-statements), allowing you to verify it was built from the source repository via GitHub Actions.
 
 ## Development
 

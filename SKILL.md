@@ -6,7 +6,7 @@ metadata: {"clawdbot":{"emoji":"📅","os":["linux","macos"],"requires":{"bins":
 
 # caldav-cli
 
-A CalDAV CLI client. Manages multiple accounts with secure OS keychain storage. Supports iCloud, Google (OAuth2), Yandex, Fastmail, Nextcloud, Baikal, and any custom CalDAV server.
+A CalDAV CLI client. Manages multiple accounts with secure OS keychain storage. Supports iCloud, Google (OAuth2), Yandex and any custom CalDAV server.
 
 ## Installation
 
@@ -95,9 +95,6 @@ caldav-cli events create --json --title "Event" --start "2026-02-10T10:00" --end
 | Apple iCloud | Basic (app-specific password) | `https://caldav.icloud.com` |
 | Google Calendar | OAuth2 (Client ID + Secret) | `https://apidata.googleusercontent.com/caldav/v2` |
 | Yandex Calendar | Basic (app password) | `https://caldav.yandex.ru` |
-| Fastmail | Basic (app password) | `https://caldav.fastmail.com/dav/calendars` |
-| Nextcloud | Basic | User provides URL |
-| Baikal | Basic | User provides URL |
 | Custom | Basic | User provides URL |
 
 ## Google Calendar Setup
@@ -113,11 +110,10 @@ The wizard will ask for these, then open a browser for authorization. The refres
 
 ## Data Storage
 
-- **Passwords and OAuth2 refresh tokens**: OS keychain (macOS Keychain, Linux libsecret, Windows Credential Vault) via `@napi-rs/keyring`. Never written to disk in plaintext.
-- **Account metadata** (name, provider ID, username, server URL): `~/.config/caldav-cli/config.json`
-- **OAuth2 client credentials** (Client ID, Client Secret, Token URL): also stored in `~/.config/caldav-cli/config.json` in plaintext. These are per-user credentials that the user creates themselves in Google Cloud Console. They are not bearer tokens and cannot access data without the refresh token (which is in the keychain).
+- **Passwords, OAuth2 refresh tokens, and OAuth2 client credentials** (Client ID, Client Secret, Token URL): OS keychain (macOS Keychain, Linux libsecret, Windows Credential Vault) via `@napi-rs/keyring`. Never written to disk in plaintext.
+- **Account metadata** (name, provider ID, username, server URL): `~/.config/caldav-cli/config.json` (file permissions `0600`).
 
-Protect `~/.config/caldav-cli/config.json` with appropriate file permissions if you store OAuth2 client credentials.
+No secrets are stored on disk. Existing installations that stored OAuth2 client credentials in `config.json` are automatically migrated to the keychain on first run.
 
 ## Flag Reference
 

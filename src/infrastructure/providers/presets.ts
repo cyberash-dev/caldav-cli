@@ -29,25 +29,4 @@ export const PRESETS: Array<ProviderPreset> = [
     hint: "Use an app password from id.yandex.ru/security/app-passwords",
     usernameHint: "full email address, e.g. you@yandex.ru",
   },
-  {
-    id: "fastmail",
-    displayName: "Fastmail",
-    serverUrl: "https://caldav.fastmail.com/dav/calendars",
-    authMethod: "basic",
-    hint: "Use an app password from Settings > Privacy & Security",
-  },
-  {
-    id: "nextcloud",
-    displayName: "Nextcloud",
-    serverUrl: "",
-    authMethod: "basic",
-    hint: "Enter your Nextcloud server URL (e.g. https://cloud.example.com/remote.php/dav)",
-  },
-  {
-    id: "baikal",
-    displayName: "Baikal",
-    serverUrl: "",
-    authMethod: "basic",
-    hint: "Enter your Baikal server URL (e.g. https://baikal.example.com/dav.php)",
-  },
 ]
