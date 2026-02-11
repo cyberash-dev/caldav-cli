@@ -1,7 +1,7 @@
 ---
 name: caldav-cli
 description: Manage CalDAV calendars (iCloud, Google, Yandex) from the command line. Supports OAuth2 and Basic auth, multi-account, table/JSON output.
-metadata: {"clawdbot":{"emoji":"📅","os":["linux","macos"],"requires":{"bins":["caldav-cli","node"]},"install":[{"id":"npm","kind":"shell","command":"npm install -g caldav-cli","bins":["caldav-cli"],"label":"Install caldav-cli via npm"}],"source":"https://github.com/cyberash-dev/caldav-cli"}}
+metadata: {"clawdbot":{"emoji":"📅","os":["linux","macos"],"requires":{"bins":["caldav-cli","node"],"configs":["~/.config/caldav-cli/config.json"],"keychain":true},"install":[{"id":"npm","kind":"shell","command":"npm install -g caldav-cli","bins":["caldav-cli"],"label":"Install caldav-cli via npm"}],"source":"https://github.com/cyberash-dev/caldav-cli"}}
 ---
 
 # caldav-cli
