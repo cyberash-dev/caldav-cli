@@ -1,6 +1,6 @@
 {
   "name": "caldav-cli",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A command-line CalDAV client for managing calendar events across multiple accounts",
   "type": "module",
   "bin": {
