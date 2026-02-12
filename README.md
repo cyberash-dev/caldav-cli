@@ -1,4 +1,4 @@
-![caldav-cli logo](./assets/caldav-cli-rounded.png)
+<img src="./assets/caldav-cli-rounded.png" alt="caldav-cli logo" width="256">
 
 # caldav-cli
 
