@@ -1,11 +1,10 @@
 # caldav-cli
 
-<table border="0" cellpadding="0" cellspacing="0">
-<tr>
-  <td><img src="./assets/caldav-cli-rounded.png" alt="caldav-cli logo" width="256"></td>
-  <td style="padding-left: 20px;">A command-line CalDAV client for managing calendar events across multiple accounts. Built with TypeScript, following Clean Architecture principles.</td>
-</tr>
-</table>
+<img src="./assets/caldav-cli-rounded.png" alt="caldav-cli logo" width="256" align="left">
+
+A command-line CalDAV client for managing calendar events across multiple accounts. Built with TypeScript, following Clean Architecture principles.
+
+<br clear="left">
 
 ## Features
 
